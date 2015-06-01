@@ -1,17 +1,17 @@
 package network
+
 import "errors"
 
 type Request interface {
-
 }
 
 type Response interface {
-    GetPayload() ([]byte)
-    GetError() (error)
+	GetPayload() []byte
+	GetError() error
 }
 
 type Page interface {
-    GetContent() ([]byte)
+	GetContent() []byte
 }
 
 var ERR_NO_MATCHING_ROUTE = errors.New("No matching route found")
