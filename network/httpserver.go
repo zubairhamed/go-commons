@@ -3,6 +3,7 @@ package network
 import (
     "net/http"
     "log"
+    "html/template"
 )
 
 func NewDefaultHttpServer() (*HttpServer) {
@@ -18,12 +19,13 @@ func (h *HttpServer) Start() {
 }
 
 func (h *HttpServer) serveServer() {
-    log.Println("Started HTTP Server @ Port 8080")
-
     wh := &WrappedHandler{
         routes: h.routes,
     }
-    http.ListenAndServe(":8081", wh)
+    err := http.ListenAndServe(":8081", wh)
+    if err != nil {
+        log.Fatal(err)
+    }
 }
 
 func (h *HttpServer) NewRoute(path string, method string, fn RouteHandler) *Route {
@@ -56,7 +58,6 @@ func (wh *WrappedHandler) ServeHTTP (w http.ResponseWriter, r *http.Request) {
             return
         }
     } else {
-
         req := NewRequestFromHttp()
         resp := route.Handler(req).(*HttpResponse)
 
@@ -65,8 +66,16 @@ func (wh *WrappedHandler) ServeHTTP (w http.ResponseWriter, r *http.Request) {
     }
 }
 
-func SendHttpResponse(response *HttpResponse, w http.ResponseWriter, r *http.Request) {
+type Person struct {
+    Name string
+}
 
+func SendHttpResponse(response *HttpResponse, w http.ResponseWriter, r *http.Request) {
+    t := template.New("newtemplate")
+
+    t, _ = t.Parse(response.Payload.String())
+
+    t.Execute(w, response.GetTemplateModel())
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,6 +90,7 @@ type HttpRequest struct {
 type HttpResponse struct {
     contentType     string
     err             error
+    TemplateModel   interface{}
     Payload         MessagePayload
 }
 
@@ -90,4 +100,12 @@ func (r *HttpResponse) GetError() error {
 
 func (r *HttpResponse) GetPayload() ([]byte) {
     return r.Payload.GetBytes()
+}
+
+func (r *HttpResponse) GetContentType() (string) {
+    return r.contentType
+}
+
+func (r *HttpResponse) GetTemplateModel() (interface{}) {
+    return r.TemplateModel
 }
