@@ -29,3 +29,10 @@ const (
     MEDIATYPE_JSON_VND_OMA_LWM2M          MediaType = 1543
     MEDIATYPE_OPAQUE_VND_OMA_LWM2M        MediaType = 1544
 )
+
+const (
+    METHOD_GET      = "GET"
+    METHOD_PUT      = "PUT"
+    METHOD_POST     = "POST"
+    METHOD_DELETE   = "DELETE"
+)

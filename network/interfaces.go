@@ -6,7 +6,8 @@ type Request interface {
 }
 
 type Response interface {
-
+    GetPayload() ([]byte)
+    GetError() (error)
 }
 
 var ERR_NO_MATCHING_ROUTE = errors.New("No matching route found")
