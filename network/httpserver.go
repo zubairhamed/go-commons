@@ -6,11 +6,14 @@ import (
 	"net/http"
 )
 
-func NewDefaultHttpServer() *HttpServer {
-	return &HttpServer{}
+func NewDefaultHttpServer(port string) *HttpServer {
+	return &HttpServer{
+		port: port,
+	}
 }
 
 type HttpServer struct {
+	port   string
 	routes []*Route
 }
 
@@ -22,10 +25,12 @@ func (h *HttpServer) serveServer() {
 	wh := &WrappedHandler{
 		routes: h.routes,
 	}
-	err := http.ListenAndServe(":8081", wh)
+	log.Println("Serving HTTP on port ", h.port)
+	err := http.ListenAndServe(":" + h.port, wh)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }
 
 func (h *HttpServer) NewRoute(path string, method string, fn RouteHandler) *Route {
