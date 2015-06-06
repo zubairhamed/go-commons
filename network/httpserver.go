@@ -26,7 +26,7 @@ func (h *HttpServer) serveServer() {
 		routes: h.routes,
 	}
 	log.Println("Serving HTTP on port ", h.port)
-	err := http.ListenAndServe(":" + h.port, wh)
+	err := http.ListenAndServe(h.port, wh)
 	if err != nil {
 		log.Fatal(err)
 	}
