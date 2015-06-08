@@ -75,6 +75,8 @@ func SendHttpResponse(response *HttpResponse, w http.ResponseWriter, r *http.Req
 
 	t, _ = t.Parse(response.Payload.String())
 
+	log.Println("SendHttpResponse", t)
+
 	t.Execute(w, response.GetTemplateModel())
 }
 
