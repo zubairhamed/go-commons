@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func NewDefaultHttpServer(port string) *HttpServer {
@@ -45,7 +46,7 @@ type WrappedHandler struct {
 }
 
 func (wh *WrappedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	route, _, err := MatchingRoute(r.URL.Path, r.Method, nil, wh.routes)
+	route, attrs, err := MatchingRoute(r.URL.Path, r.Method, nil, wh.routes)
 
 	if err != nil {
 		if err == ERR_NO_MATCHING_ROUTE {
@@ -63,7 +64,7 @@ func (wh *WrappedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		req := NewRequestFromHttp()
+		req := NewRequestFromHttp(attrs)
 		resp := route.Handler(req).(*HttpResponse)
 
 		SendHttpResponse(resp, w, r)
@@ -86,11 +87,29 @@ func SendHttpResponse(response *HttpResponse, w http.ResponseWriter, r *http.Req
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func NewRequestFromHttp() *HttpRequest {
-	return &HttpRequest{}
+func NewRequestFromHttp(attrs map[string]string) *HttpRequest {
+	return &HttpRequest{
+		attrs:	attrs,
+	}
 }
 
 type HttpRequest struct {
+	attrs map[string]string
+}
+
+func (c *HttpRequest) GetAttributes() map[string]string {
+	return c.attrs
+}
+
+func (c *HttpRequest) GetAttribute(o string) string {
+	return c.attrs[o]
+}
+
+func (c *HttpRequest) GetAttributeAsInt(o string) int {
+	attr := c.GetAttribute(o)
+	i, _ := strconv.Atoi(attr)
+
+	return i
 }
 
 type HttpResponse struct {
