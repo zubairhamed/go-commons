@@ -77,11 +77,10 @@ type Person struct {
 }
 
 func SendHttpResponse(response *HttpResponse, w http.ResponseWriter, r *http.Request) {
+	log.Println("SendHttpResponse")
 	t := template.New("newtemplate")
 
 	t, _ = t.Parse(response.Payload.String())
-
-	log.Println("SendHttpResponse", t)
 
 	t.Execute(w, response.GetTemplateModel())
 }

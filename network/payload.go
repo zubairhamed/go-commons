@@ -2,6 +2,8 @@ package network
 
 import (
 	"bytes"
+	"encoding/json"
+	"log"
 )
 
 type MessagePayload interface {
@@ -89,4 +91,33 @@ func (p *EmptyPayload) Length() int {
 
 func (p *EmptyPayload) String() string {
 	return ""
+}
+
+func NewJsonPayload(obj interface{}) MessagePayload {
+	return &JsonPayload{
+		obj: obj,
+	}
+}
+
+type JsonPayload struct {
+	obj interface{}
+}
+
+func (p *JsonPayload) GetBytes() []byte {
+	o, _ := json.Marshal(p.obj)
+
+	return []byte(string(o))
+}
+
+func (p *JsonPayload) Length() int {
+	return 0
+}
+
+func (p *JsonPayload) String() string {
+	o, _ := json.Marshal(p.obj)
+
+	log.Println(p.obj, o)
+	log.Println(string(o))
+
+	return string(o)
 }
