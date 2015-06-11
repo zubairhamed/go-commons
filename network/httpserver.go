@@ -72,13 +72,10 @@ func (wh *WrappedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type Person struct {
-	Name string
-}
-
 func SendHttpResponse(response *HttpResponse, w http.ResponseWriter, r *http.Request) {
-	log.Println("SendHttpResponse")
 	t := template.New("newtemplate")
+
+	// Handle content type
 
 	t, _ = t.Parse(response.Payload.String())
 
