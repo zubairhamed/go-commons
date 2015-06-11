@@ -1,7 +1,6 @@
 package network
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -73,13 +72,7 @@ func (wh *WrappedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func SendHttpResponse(response *HttpResponse, w http.ResponseWriter, r *http.Request) {
-	t := template.New("newtemplate")
-
-	// Handle content type
-
-	t, _ = t.Parse(response.Payload.String())
-
-	t.Execute(w, response.GetTemplateModel())
+	w.Write(response.Payload.GetBytes())
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
