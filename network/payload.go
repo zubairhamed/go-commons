@@ -104,7 +104,13 @@ type JsonPayload struct {
 }
 
 func (p *JsonPayload) GetBytes() []byte {
-	o, _ := json.Marshal(p.obj)
+	o, err := json.MarshalIndent(p.obj, "", "   ")
+
+	if err != nil {
+		log.Println(err)
+
+		return []byte{}
+	}
 
 	return []byte(string(o))
 }
@@ -115,9 +121,6 @@ func (p *JsonPayload) Length() int {
 
 func (p *JsonPayload) String() string {
 	o, _ := json.Marshal(p.obj)
-
-	log.Println(p.obj, o)
-	log.Println(string(o))
 
 	return string(o)
 }
