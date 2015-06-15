@@ -1,18 +1,17 @@
 package logging
+
 import "log"
 
-type Logging struct {
-
+func LogError(e error) {
+	if e != nil {
+		log.Println("[ERROR] ", e)
+	}
 }
 
-func (l *Logging) Debug(v ...interface{}) {
-
+func LogWarn(msg string) {
+	log.Println("[WARN] ", msg)
 }
 
-func (l *Logging) Info (v ...interface{}) {
-
-}
-
-func (l *Logging) Warnv ...interface{} {
-
+func LogInfo(msg string) {
+	log.Println("[INFO] ", msg)
 }

@@ -49,9 +49,9 @@ func (p *CoreLinkFormatPayload) String() string {
 	return ""
 }
 
-func NewBytesPayload(b []byte) MessagePayload {
+func NewBytesPayload(v []byte) MessagePayload {
 	return &BytesPayload{
-		content: b,
+		content: v,
 	}
 }
 
