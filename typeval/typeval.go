@@ -353,44 +353,6 @@ func MultipleIntegers(v ...Value) Value {
 	}
 }
 
-
-////////////////////////////////////////////////////////////////////
-/*
-func Tlv(b []byte) ResponseValue {
-	return &TlvValue{
-		content: b,
-	}
-}
-
-type TlvValue struct {
-	content []byte
-}
-
-func (p *TlvValue) GetBytes() []byte {
-	return p.content
-}
-
-func (p *TlvValue) Length() int {
-	return len(p.content)
-}
-
-func (p *TlvValue) String() string {
-	return ""
-}
-
-func (p *TlvValue) GetStringValue() string {
-	return ""
-}
-
-func (v *TlvValue) GetType() ValueTypeCode {
- 	return VALUETYPE_TLV
-}
-
-func (v *TlvValue) GetValue() interface{} {
-	return v.content
-}
-*/
-
 func ValueByType(t ValueTypeCode, val []byte) Value {
 	var value Value
 
