@@ -10,19 +10,22 @@ import (
 
 type ValueTypeCode byte
 const (
-	VALUETYPE_EMPTY 	 ValueTypeCode = 0
-	VALUETYPE_MULTIPLE 	 ValueTypeCode = 1
-	VALUETYPE_STRING     ValueTypeCode = 2
-	VALUETYPE_BYTE    	 ValueTypeCode = 3
-	VALUETYPE_INTEGER    ValueTypeCode = 4
-	VALUETYPE_INTEGER32  ValueTypeCode = 5
-	VALUETYPE_INTEGER64  ValueTypeCode = 6
-	VALUETYPE_FLOAT   	 ValueTypeCode = 7
-	VALUETYPE_FLOAT64    ValueTypeCode = 8
-	VALUETYPE_BOOLEAN    ValueTypeCode = 9
-	VALUETYPE_OPAQUE     ValueTypeCode = 10
-	VALUETYPE_TIME       ValueTypeCode = 11
-	VALUETYPE_OBJECTLINK ValueTypeCode = 12
+	VALUETYPE_EMPTY 	 	ValueTypeCode = 0
+	VALUETYPE_MULTIPLE 	 	ValueTypeCode = 1
+	VALUETYPE_STRING     	ValueTypeCode = 2
+	VALUETYPE_BYTE    	 	ValueTypeCode = 3
+	VALUETYPE_INTEGER    	ValueTypeCode = 4
+	VALUETYPE_INTEGER32  	ValueTypeCode = 5
+	VALUETYPE_INTEGER64  	ValueTypeCode = 6
+	VALUETYPE_FLOAT   	 	ValueTypeCode = 7
+	VALUETYPE_FLOAT64    	ValueTypeCode = 8
+	VALUETYPE_BOOLEAN    	ValueTypeCode = 9
+	VALUETYPE_OPAQUE     	ValueTypeCode = 10
+	VALUETYPE_TIME       	ValueTypeCode = 11
+	VALUETYPE_OBJECTLINK 	ValueTypeCode = 12
+	VALUETYPE_OBJECT 	 	ValueTypeCode = 13
+	VALUETYPE_RESOURCE	 	ValueTypeCode = 14
+	VALUETYPE_MULTIRESOURCE ValueTypeCode = 15
 )
 
 // ResponseValue interface represents response to a server request
