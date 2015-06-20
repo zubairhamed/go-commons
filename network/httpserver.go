@@ -78,7 +78,7 @@ func SendHttpResponse(response *HttpResponse, w http.ResponseWriter, r *http.Req
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func NewRequestFromHttp(attrs map[string]string) *HttpRequest {
 	return &HttpRequest{
-		attrs:	attrs,
+		attrs: attrs,
 	}
 }
 

@@ -3,7 +3,6 @@ package network
 import "errors"
 
 type Request interface {
-
 }
 
 type Response interface {

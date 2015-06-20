@@ -3,28 +3,29 @@ package typeval
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"strconv"
 	"time"
-	"errors"
 )
 
 type ValueTypeCode byte
+
 const (
-	VALUETYPE_EMPTY 	 	ValueTypeCode = 0
-	VALUETYPE_MULTIPLE 	 	ValueTypeCode = 1
-	VALUETYPE_STRING     	ValueTypeCode = 2
-	VALUETYPE_BYTE    	 	ValueTypeCode = 3
-	VALUETYPE_INTEGER    	ValueTypeCode = 4
-	VALUETYPE_INTEGER32  	ValueTypeCode = 5
-	VALUETYPE_INTEGER64  	ValueTypeCode = 6
-	VALUETYPE_FLOAT   	 	ValueTypeCode = 7
-	VALUETYPE_FLOAT64    	ValueTypeCode = 8
-	VALUETYPE_BOOLEAN    	ValueTypeCode = 9
-	VALUETYPE_OPAQUE     	ValueTypeCode = 10
-	VALUETYPE_TIME       	ValueTypeCode = 11
-	VALUETYPE_OBJECTLINK 	ValueTypeCode = 12
-	VALUETYPE_OBJECT 	 	ValueTypeCode = 13
-	VALUETYPE_RESOURCE	 	ValueTypeCode = 14
+	VALUETYPE_EMPTY         ValueTypeCode = 0
+	VALUETYPE_MULTIPLE      ValueTypeCode = 1
+	VALUETYPE_STRING        ValueTypeCode = 2
+	VALUETYPE_BYTE          ValueTypeCode = 3
+	VALUETYPE_INTEGER       ValueTypeCode = 4
+	VALUETYPE_INTEGER32     ValueTypeCode = 5
+	VALUETYPE_INTEGER64     ValueTypeCode = 6
+	VALUETYPE_FLOAT         ValueTypeCode = 7
+	VALUETYPE_FLOAT64       ValueTypeCode = 8
+	VALUETYPE_BOOLEAN       ValueTypeCode = 9
+	VALUETYPE_OPAQUE        ValueTypeCode = 10
+	VALUETYPE_TIME          ValueTypeCode = 11
+	VALUETYPE_OBJECTLINK    ValueTypeCode = 12
+	VALUETYPE_OBJECT        ValueTypeCode = 13
+	VALUETYPE_RESOURCE      ValueTypeCode = 14
 	VALUETYPE_MULTIRESOURCE ValueTypeCode = 15
 )
 
@@ -39,8 +40,8 @@ type Value interface {
 }
 
 type MultipleValue struct {
-	values 			[]Value
-	containedType	ValueTypeCode
+	values        []Value
+	containedType ValueTypeCode
 }
 
 func (v *MultipleValue) GetContainedType() ValueTypeCode {
@@ -79,7 +80,6 @@ func (v *StringValue) GetContainedType() ValueTypeCode {
 	return VALUETYPE_STRING
 }
 
-
 func (v *StringValue) GetValue() interface{} {
 	return v.value
 }
@@ -93,7 +93,18 @@ type IntegerValue struct {
 }
 
 func (v *IntegerValue) GetBytes() []byte {
-	return []byte(strconv.Itoa(v.value))
+	sz, _ := GetValueByteLength(v.value)
+	buf := new(bytes.Buffer)
+	if sz == 1 {
+		binary.Write(buf, binary.LittleEndian, int8(v.value))
+	} else if sz == 2 {
+		binary.Write(buf, binary.LittleEndian, int16(v.value))
+	} else if sz == 4 {
+		binary.Write(buf, binary.LittleEndian, int32(v.value))
+	} else if sz == 8 {
+		binary.Write(buf, binary.LittleEndian, int64(v.value))
+	}
+	return buf.Bytes()
 }
 
 func (v *IntegerValue) GetType() ValueTypeCode {
@@ -228,7 +239,6 @@ func Empty() Value {
 }
 
 type EmptyValue struct {
-
 }
 
 func (v *EmptyValue) GetBytes() []byte {
@@ -242,7 +252,6 @@ func (v *EmptyValue) GetType() ValueTypeCode {
 func (v *EmptyValue) GetContainedType() ValueTypeCode {
 	return VALUETYPE_EMPTY
 }
-
 
 func (v *EmptyValue) GetValue() interface{} {
 	return ""
@@ -344,14 +353,14 @@ func Boolean(v ...bool) Value {
 
 func Multiple(ct ValueTypeCode, v ...Value) Value {
 	return &MultipleValue{
-		values: v,
+		values:        v,
 		containedType: ct,
 	}
 }
 
 func MultipleIntegers(v ...Value) Value {
 	return &MultipleValue{
-		values: v,
+		values:        v,
 		containedType: VALUETYPE_INTEGER,
 	}
 }
@@ -362,7 +371,7 @@ func ValueByType(t ValueTypeCode, val []byte) Value {
 	switch t {
 	case VALUETYPE_STRING:
 		value = String(string(val))
-		break;
+		break
 	}
 
 	return value
@@ -408,3 +417,19 @@ func GetValueByteLength(val interface{}) (uint32, error) {
 	}
 }
 
+func BytesToIntegerValue(b []byte) (conv Value) {
+	intLen := len(b)
+
+	if intLen == 1 {
+		conv = Integer(int(b[0]))
+	} else if intLen == 2 {
+		conv = Integer(int(b[1]) | (int(b[0]) << 8))
+	} else if intLen == 4 {
+		conv = Integer(int(b[3]) | (int(b[2]) << 8) | (int(b[1]) << 16) | (int(b[0]) << 24))
+	} else if intLen == 8 {
+		conv = Integer(int(b[7]) | (int(b[6]) << 8) | (int(b[5]) << 16) | (int(b[4]) << 24) | (int(b[3]) << 32) | (int(b[2]) << 40) | (int(b[1]) << 48) | (int(b[0]) << 56))
+	} else {
+		// Error
+	}
+	return
+}
