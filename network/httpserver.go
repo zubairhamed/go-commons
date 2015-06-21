@@ -9,6 +9,7 @@ import (
 func NewDefaultHttpServer(port string) *HttpServer {
 	return &HttpServer{
 		port: port,
+		routes: []*Route{},
 	}
 }
 
