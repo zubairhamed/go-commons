@@ -2,16 +2,14 @@ package logging
 
 import "log"
 
-func LogError(e error) {
-	if e != nil {
-		log.Println("[ERROR] ", e)
-	}
+func LogError(v ...interface{}) {
+	log.Println("[ERROR] ", v)
 }
 
-func LogWarn(msg string) {
-	log.Println("[WARN] ", msg)
+func LogWarn(v ...interface{}) {
+	log.Println("[WARN] ", v)
 }
 
-func LogInfo(msg string) {
-	log.Println("[INFO] ", msg)
+func LogInfo(v ...interface{}) {
+	log.Println("[INFO] ", v)
 }
